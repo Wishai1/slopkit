@@ -1,4 +1,4 @@
-const CACHE_NAME = 'slopkit-offline-v1'; // Изменена версия для сброса старого кэша
+const CACHE_NAME = 'slopkit-offline-v3'; // Изменена версия для сброса старого кэша
 
 const urlsToCache = [
     './',
