@@ -6,6 +6,7 @@
 <title>slopkit</title>
 <link rel="preload" href="cat.jpg" as="image">
 <link rel="preload" href="mmhmm-cats-ps5.gif" as="image">
+<div id="status-text" style="font-size: 24px; color: #ebcb8b; text-align: center; margin-bottom: 15px; font-weight: bold; min-height: 30px;"></div>
 
 <script>(function () {
     var pending = [];
@@ -624,17 +625,24 @@ async function sendPayloadToElfldr(name) {
     return { name, bytes: sent };
 }
 
-// Исправлена опечатка в слове async
 async function sendPayloadInPlace(name, tile) {
     if (payloadSendBusy) return;
     payloadSendBusy = true;
+
+    // Включаем нашу надпись на экране
+    const statusEl = document.getElementById("status-text");
+    if (statusEl) {
+        statusEl.style.color = "#ebcb8b"; // Желтый цвет для ожидания
+        statusEl.innerText = "Скачивание и запуск " + name + "... Подождите!";
+    }
+
     const tiles = payloadMenuEl.getElementsByTagName("a");
     for (let i = 0; i < tiles.length; ++i)
         tiles[i].className = "payloadTile busy";
     tile.className = "payloadTile";
     setPayloadTileState(tile, "sending");
     
-    // Надпись перед началом отправки
+    // Старый лог (остается для совместимости)
     stage("Отправка нагрузки " + name + ". Пожалуйста, подождите...", "ok");
 
     try {
@@ -642,13 +650,21 @@ async function sendPayloadInPlace(name, tile) {
         tile.className = "payloadTile";
         setPayloadTileState(tile, "sent");
         
-        // Выводим успех на экран
+        // Успех - меняем текст и цвет на зеленый
+        if (statusEl) {
+            statusEl.style.color = "#47c76a"; 
+            statusEl.innerText = "Нагрузка успешно отправлена!";
+        }
         stage("УСПЕХ: " + result.name + " отправлен (" + result.bytes + " байт)", "ok");
     } catch (error) {
         tile.className = "payloadTile";
         setPayloadTileState(tile, "failed");
         
-        // Выводим ошибку на экран
+        // Ошибка - меняем текст и цвет на красный
+        if (statusEl) {
+            statusEl.style.color = "#ff5566"; 
+            statusEl.innerText = "Ошибка загрузки!";
+        }
         let errText = error && error.message ? error.message : error;
         stage("ОШИБКА ЗАГРУЗКИ: " + errText, "bad");
     } finally {
