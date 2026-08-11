@@ -469,7 +469,7 @@ const payloadMenuEl = document.getElementById("payloadMenu");
 const rowByKey = new Map();
 let payloadSendBusy = false;
 const PAYLOAD_PORT = 9021;
-const PAYLOAD_BUFFER_SIZE = 0x10000;
+const PAYLOAD_BUFFER_SIZE = 0x80000;
 const PAYLOAD_MAX_SIZE = 0x800000;
 let payloadSendStore = null;
 let payloadSockaddrStore = null;
@@ -545,66 +545,45 @@ function preparePayloadSender() {
 }
 
 async function sendPayloadToElfldr(name) {
-    if (!elfldrSpawned)
-        throw new Error("ELF loader is not ready");
-    if (!P || !chain)
-        throw new Error("the post-jailbreak ROP runtime is unavailable");
-    if (chainDead)
-        throw new Error("the ROP chain is unusable after " + chainDead);
-    if (payloadSenderBlocked)
-        throw new Error(payloadSenderBlocked);
-    if (!payloadIsListed(name))
-        throw new Error("payload is not listed in this menu");
+    if (!elfldrSpawned) throw new Error("ELF loader не готов");
+    if (!P || !chain) throw new Error("ROP-цепочка недоступна");
+    if (chainDead) throw new Error("ROP упал после: " + chainDead);
+    if (!payloadIsListed(name)) throw new Error("Пейлоад не в меню");
 
-    const response = await fetch("../payloads/" + encodeURIComponent(name),
-        { cache: "no-store" });
-    if (!response.ok)
-        throw new Error("payload fetch failed: HTTP " + response.status);
+    // Запрашиваем файл с сервера
+    const response = await fetch("../payloads/" + encodeURIComponent(name), { cache: "no-store" });
+    if (!response.ok) throw new Error("HTTP " + response.status + ": Файла " + name + " нет в папке payloads!");
+
     const bytes = new Uint8Array(await response.arrayBuffer());
-    if (!bytes.length)
-        throw new Error("payload is empty");
-    if (bytes.length > PAYLOAD_MAX_SIZE)
-        throw new Error("payload is larger than the 2 MiB limit");
-    if (bytes.length < 4 || bytes[0] !== 0x7f || bytes[1] !== 0x45
-        || bytes[2] !== 0x4c || bytes[3] !== 0x46)
-        throw new Error("payload does not start with the ELF signature");
+    if (!bytes.length) throw new Error("Файл пустой");
+    if (bytes.length > PAYLOAD_MAX_SIZE) throw new Error("Размер файла превышает лимит 8 МБ");
+    if (bytes.length < 4 || bytes[0] !== 0x7f || bytes[1] !== 0x45 || bytes[2] !== 0x4c || bytes[3] !== 0x46)
+        throw new Error("Файл не является ELF-пейлоадом");
 
     preparePayloadSender();
     let fd = -1;
     let sent = 0;
     let failure = null;
-    let closeWarning = null;
+
     try {
         let result = await sys(SYS_SOCKET, 2, 1, 0);
-        if (result.failed || result.s32 < 0)
-            throw payloadSyscallError("socket", result);
+        if (result.failed || result.s32 < 0) throw payloadSyscallError("socket", result);
         fd = result.s32;
         track(fd);
 
-        result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x0800,
-            payloadSocketOptionStore.ptr, 4);
-        if (result.failed || result.s32 !== 0)
-            throw payloadSyscallError("setsockopt SO_NOSIGPIPE", result);
-
-        result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x1005,
-            payloadSendTimeoutStore.ptr, 0x10);
-        if (result.failed || result.s32 !== 0)
-            throw payloadSyscallError("setsockopt SO_SNDTIMEO", result);
-
+        result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x0800, payloadSocketOptionStore.ptr, 4);
+        result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x1005, payloadSendTimeoutStore.ptr, 0x10);
         result = await sys(SYS_CONNECT, fd, payloadSockaddrStore.ptr, 0x10);
-        if (result.failed || result.s32 !== 0)
-            throw payloadSyscallError("connect to 127.0.0.1:9021", result);
+        if (result.failed || result.s32 !== 0) throw payloadSyscallError("connect", result);
 
+        // Отправка увеличенными блоками
         while (sent < bytes.length) {
             const blockSize = Math.min(PAYLOAD_BUFFER_SIZE, bytes.length - sent);
             payloadSendStore.u8.set(bytes.subarray(sent, sent + blockSize), 0);
             let blockSent = 0;
             while (blockSent < blockSize) {
-                result = await sys(SYS_WRITE, fd,
-                    payloadSendStore.ptr.add32(blockSent), blockSize - blockSent);
-                if (result.failed || result.s32 <= 0)
-                    throw payloadSyscallError("write at byte "
-                        + (sent + blockSent), result);
+                result = await sys(SYS_WRITE, fd, payloadSendStore.ptr.add32(blockSent), blockSize - blockSent);
+                if (result.failed || result.s32 <= 0) throw payloadSyscallError("write", result);
                 blockSent += result.s32;
             }
             sent += blockSize;
@@ -616,77 +595,36 @@ async function sendPayloadToElfldr(name) {
     if (fd >= 0 && !chainDead) {
         try {
             const result = await sys(SYS_CLOSE, fd);
-            if (result.failed || result.s32 !== 0) {
-                const error = payloadSyscallError("close", result);
-                if (failure === null && sent === bytes.length)
-                    closeWarning = error;
-                else if (failure === null)
-                    failure = error;
-                else
-                    failure = new Error(failure.message + "; additionally, "
-                        + error.message);
-            } else {
-                untrack(fd);
-            }
-        } catch (error) {
-            if (failure === null && sent === bytes.length)
-                closeWarning = error;
-            else if (failure === null)
-                failure = error;
-            else
-                failure = new Error(failure.message + "; additionally, close failed: "
-                    + (error && error.message ? error.message : error));
-        }
-    } else if (fd >= 0 && failure !== null) {
-        failure = new Error(failure.message + "; socket fd " + fd
-            + " remains tracked because the ROP chain is unusable");
+            if (result.failed || result.s32 === 0) untrack(fd);
+        } catch (e) { }
     }
-
-    if (fd >= 0 && state.fdOpen.has(fd))
-        payloadSenderBlocked = "payload sending is blocked until reboot because "
-            + "socket fd " + fd + " was not confirmed closed";
-
     if (failure !== null) throw failure;
-    return { name, bytes: sent, target: "127.0.0.1", port: PAYLOAD_PORT,
-        closeWarning: closeWarning };
+    return { name, bytes: sent };
 }
 
 async function sendPayloadInPlace(name, tile) {
     if (payloadSendBusy) return;
     payloadSendBusy = true;
     const tiles = payloadMenuEl.getElementsByTagName("a");
-    for (let i = 0; i < tiles.length; ++i)
-        tiles[i].className = "payloadTile busy";
+    for (let i = 0; i < tiles.length; ++i) tiles[i].className = "payloadTile busy";
     tile.className = "payloadTile";
     setPayloadTileState(tile, "sending");
+    
     try {
         const result = await sendPayloadToElfldr(name);
         tile.className = "payloadTile";
         setPayloadTileState(tile, "sent");
-        flushMark("ELF-SENT", "name=" + clean(result.name) + "-bytes="
-            + result.bytes + "-target=" + clean(result.target)
-            + "-port=" + result.port);
-        if (result.closeWarning)
-            flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
-                + "-why=" + clean(result.closeWarning.message || result.closeWarning));
+        stage("УСПЕХ: " + result.name + " отправлен (" + result.bytes + " байт)", "ok");
     } catch (error) {
         tile.className = "payloadTile";
         setPayloadTileState(tile, "failed");
-        flushMark("ELF-SEND-FAILED", "name=" + clean(name) + "-why="
-            + clean(error && error.message ? error.message : error));
+        let errText = error && error.message ? error.message : error;
+        // ВЫВОДИМ ОШИБКУ НА ЭКРАН вместо тихих логов
+        stage("ОШИБКА ЗАГРУЗКИ: " + errText, "bad"); 
     } finally {
-        if (payloadSenderBlocked) {
-            payloadSendBusy = true;
-            for (let i = 0; i < tiles.length; ++i)
-                tiles[i].className = "payloadTile busy";
-            setCatResult(false);
-            flushMark("ELF-SENDER-BLOCKED", clean(payloadSenderBlocked));
-        } else {
-            payloadSendBusy = false;
-            for (let i = 0; i < tiles.length; ++i)
-                if (tiles[i] !== tile) tiles[i].className = "payloadTile";
-            try { tile.focus(); } catch (e) { }
-        }
+        payloadSendBusy = false;
+        for (let i = 0; i < tiles.length; ++i)
+            if (tiles[i] !== tile) tiles[i].className = "payloadTile";
     }
 }
 
