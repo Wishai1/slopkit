@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>slopkit - Запуск</title>
+    <title>slopkit - Установка кэша</title>
     <style>
         body { 
             background: #0c111b; 
@@ -31,34 +31,32 @@
     <div id="status" style="margin-top:20px;">Кэширование среды...</div>
 
     <script>
+        // Ваш целевой URL с параметрами
         const targetUrl = "./slopkit/poops.html?go=1&auto=1&trigger=netcontrol&payload=1&v=17";
 
-        // Если Service Worker уже установлен и контролирует страницу (кэш есть) - МОМЕНТАЛЬНЫЙ РЕДИРЕКТ
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-            window.location.replace(targetUrl);
-        } 
-        else if ('serviceWorker' in navigator) {
-            // Если кэша еще нет, регистрируем и показываем анимацию загрузки
+        function redirect() {
+            document.getElementById('status').innerText = "Готово! Запуск...";
+            document.getElementById('loader').style.display = "none";
+            setTimeout(() => { window.location.href = targetUrl; }, 600);
+        }
+
+        if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js').then(function(reg) {
+                // Ждем, пока Service Worker скачает файлы
                 if (reg.installing) {
                     reg.installing.addEventListener('statechange', function(e) {
-                        // Как только скачивание завершилось - моментальный редирект
-                        if (e.target.state === 'installed') {
-                            window.location.replace(targetUrl);
-                        }
+                        if (e.target.state === 'installed') redirect();
                     });
                 } else if (reg.active) {
-                    // Резервная проверка
-                    window.location.replace(targetUrl);
+                    // Если кэш уже был установлен ранее
+                    redirect();
                 }
-            }).catch(function() {
-                // Если произошла ошибка (например, нет сети при первой попытке)
-                window.location.replace(targetUrl);
+            }).catch(function(err) {
+                document.getElementById('status').innerText = "Ошибка кэширования, запуск по сети...";
+                setTimeout(() => { window.location.href = targetUrl; }, 1500);
             });
-        } 
-        else {
-            // Для браузеров без поддержки Service Worker
-            window.location.replace(targetUrl);
+        } else {
+            redirect();
         }
     </script>
 </body>
