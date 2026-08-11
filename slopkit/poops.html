@@ -625,7 +625,7 @@ const payloadUrl = "../payloads/" + encodeURIComponent(name);
     return { name, bytes: sent };
 }
 
-async function sendPayloadInPlace(name, tile) {
+sync function sendPayloadInPlace(name, tile) {
     if (payloadSendBusy) return;
     payloadSendBusy = true;
     const tiles = payloadMenuEl.getElementsByTagName("a");
@@ -633,43 +633,21 @@ async function sendPayloadInPlace(name, tile) {
         tiles[i].className = "payloadTile busy";
     tile.className = "payloadTile";
     setPayloadTileState(tile, "sending");
-
-    // --- НОВЫЙ КОД: Выводим надпись перед началом отправки ---
-    stage("Отправка нагрузки " + name + ". Пожалуйста, подождите...", "ok");
-    // ---------------------------------------------------------
-
     try {
         const result = await sendPayloadToElfldr(name);
         tile.className = "payloadTile";
         setPayloadTileState(tile, "sent");
-
-        // --- СТАРЫЙ КОД ЗАКОММЕНТИРОВАН (скрытые логи) ---
-        // flushMark("ELF-SENT", "name=" + clean(result.name) + "-bytes="
-        //     + result.bytes + "-target=" + clean(result.target)
-        //     + "-port=" + result.port);
-        // if (result.closeWarning)
-        //     flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
-        //         + "-why=" + clean(result.closeWarning.message || result.closeWarning));
-        // -------------------------------------------------
-
-        // --- НОВЫЙ КОД: Выводим успех на экран ---
-        stage("УСПЕХ: " + result.name + " отправлен (" + result.bytes + " байт)", "ok");
-        // -----------------------------------------
-
+        flushMark("ELF-SENT", "name=" + clean(result.name) + "-bytes="
+            + result.bytes + "-target=" + clean(result.target)
+            + "-port=" + result.port);
+        if (result.closeWarning)
+            flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
+                + "-why=" + clean(result.closeWarning.message || result.closeWarning));
     } catch (error) {
         tile.className = "payloadTile";
         setPayloadTileState(tile, "failed");
-
-        // --- СТАРЫЙ КОД ЗАКОММЕНТИРОВАН (скрытые логи) ---
-        // flushMark("ELF-SEND-FAILED", "name=" + clean(name) + "-why="
-        //     + clean(error && error.message ? error.message : error));
-        // -------------------------------------------------
-
-        // --- НОВЫЙ КОД: Выводим ошибку на экран ---
-        let errText = error && error.message ? error.message : error;
-        stage("ОШИБКА ЗАГРУЗКИ: " + errText, "bad");
-        // ------------------------------------------
-
+        flushMark("ELF-SEND-FAILED", "name=" + clean(name) + "-why="
+            + clean(error && error.message ? error.message : error));
     } finally {
         if (payloadSenderBlocked) {
             payloadSendBusy = true;
