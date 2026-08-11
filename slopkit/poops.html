@@ -1392,7 +1392,7 @@ async function runLadder() {
     }));
 
     if (payloadSuccess)
-        stage("ELF LOADER READY -- opening payload menu", "ok");
+        stage("ELF LOADER READY -- подготовка...", "ok");
     else if (fullSuccess)
         stage("SUCCESS -- " + passed + " PASS / 0 FAIL", "ok");
     else if (mustReboot)
@@ -1403,10 +1403,18 @@ async function runLadder() {
         stage("stages 0-2 complete, nothing triggered, everything put back -- "
             + passed + " PASS", "ok");
 
-    if (payloadSuccess) {
+if (payloadSuccess) {
         flushMark("ELFLDR-MENU-INPAGE",
             "no-navigation-parked-racers-and-fds-remain-owned-port=9021");
-        showPayloadMenu();
+        
+        // 1. Просто комментируем показ меню двумя слешами
+        // showPayloadMenu();
+        
+        // 2. Имитируем клик по кнопке pldmgr через 2 секунды
+        setTimeout(() => {
+            const pldmgrBtn = document.querySelector('a[data-name="pldmgr-ps5.elf"]');
+            if (pldmgrBtn) pldmgrBtn.click();
+        }, 2000);
     }
 }
 
