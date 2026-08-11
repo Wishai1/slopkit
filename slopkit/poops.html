@@ -550,8 +550,7 @@ async function sendPayloadToElfldr(name) {
     if (chainDead) throw new Error("ROP упал после: " + chainDead);
     if (!payloadIsListed(name)) throw new Error("Пейлоад не в меню");
 
-    // Запрашиваем файл с сервера
-const payloadUrl = "../payloads/" + encodeURIComponent(name);
+    const payloadUrl = "../payloads/" + encodeURIComponent(name);
     let response;
 
     try {
@@ -575,9 +574,9 @@ const payloadUrl = "../payloads/" + encodeURIComponent(name);
         response = await fetch(payloadUrl, { cache: "no-store" });
     }
 
+    // Убрали дубликат этой строки
     const bytes = new Uint8Array(await response.arrayBuffer());
 
-    const bytes = new Uint8Array(await response.arrayBuffer());
     if (!bytes.length) throw new Error("Файл пустой");
     if (bytes.length > PAYLOAD_MAX_SIZE) throw new Error("Размер файла превышает лимит 8 МБ");
     if (bytes.length < 4 || bytes[0] !== 0x7f || bytes[1] !== 0x45 || bytes[2] !== 0x4c || bytes[3] !== 0x46)
@@ -625,7 +624,8 @@ const payloadUrl = "../payloads/" + encodeURIComponent(name);
     return { name, bytes: sent };
 }
 
-sync function sendPayloadInPlace(name, tile) {
+// Исправлена опечатка в слове async
+async function sendPayloadInPlace(name, tile) {
     if (payloadSendBusy) return;
     payloadSendBusy = true;
     const tiles = payloadMenuEl.getElementsByTagName("a");
@@ -633,34 +633,29 @@ sync function sendPayloadInPlace(name, tile) {
         tiles[i].className = "payloadTile busy";
     tile.className = "payloadTile";
     setPayloadTileState(tile, "sending");
+    
+    // Надпись перед началом отправки
+    stage("Отправка нагрузки " + name + ". Пожалуйста, подождите...", "ok");
+
     try {
         const result = await sendPayloadToElfldr(name);
         tile.className = "payloadTile";
         setPayloadTileState(tile, "sent");
-        flushMark("ELF-SENT", "name=" + clean(result.name) + "-bytes="
-            + result.bytes + "-target=" + clean(result.target)
-            + "-port=" + result.port);
-        if (result.closeWarning)
-            flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
-                + "-why=" + clean(result.closeWarning.message || result.closeWarning));
+        
+        // Выводим успех на экран
+        stage("УСПЕХ: " + result.name + " отправлен (" + result.bytes + " байт)", "ok");
     } catch (error) {
         tile.className = "payloadTile";
         setPayloadTileState(tile, "failed");
-        flushMark("ELF-SEND-FAILED", "name=" + clean(name) + "-why="
-            + clean(error && error.message ? error.message : error));
+        
+        // Выводим ошибку на экран
+        let errText = error && error.message ? error.message : error;
+        stage("ОШИБКА ЗАГРУЗКИ: " + errText, "bad");
     } finally {
-        if (payloadSenderBlocked) {
-            payloadSendBusy = true;
-            for (let i = 0; i < tiles.length; ++i)
-                tiles[i].className = "payloadTile busy";
-            setCatResult(false);
-            flushMark("ELF-SENDER-BLOCKED", clean(payloadSenderBlocked));
-        } else {
-            payloadSendBusy = false;
-            for (let i = 0; i < tiles.length; ++i)
-                if (tiles[i] !== tile) tiles[i].className = "payloadTile";
-            try { tile.focus(); } catch (e) { }
-        }
+        payloadSendBusy = false;
+        for (let i = 0; i < tiles.length; ++i)
+            if (tiles[i] !== tile) tiles[i].className = "payloadTile";
+        try { tile.focus(); } catch (e) { }
     }
 }
 
