@@ -1,0 +1,7 @@
+{
+  "go": 1,
+  "auto": 1,
+  "trigger": "netcontrol",
+  "payload": 1,
+  "v": 17
+}
