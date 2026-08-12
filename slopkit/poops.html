@@ -652,7 +652,6 @@
             }
         }
 
-<!-- ... existing code ... -->
         async function sendPayloadToElfldr(name) {
             if (!elfldrSpawned) throw new Error("ELF loader не готов");
             if (!P || !chain) throw new Error("ROP-цепочка недоступна");
