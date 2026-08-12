@@ -172,6 +172,8 @@
             <section class="flex flex-col gap-2">
                 <div class="flex justify-between items-end">
                     <h2 class="text-slop-text font-bold tracking-widest text-[10px] uppercase">Журнал событий</h2>
+                    <button id="sim-btn" onclick="runSimulation()" class="text-[10px] font-bold text-slop-neon border border-slop-neon px-2 py-1 rounded hover:bg-slop-neon hover:text-black transition-colors">
+                        ТЕСТ UI
                     </button>
                 </div>
                 <div class="terminal-box border border-slop-border rounded-lg h-[200px] p-4 flex flex-col relative overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
@@ -188,7 +190,9 @@
         <div id="stage"></div><div id="vitals"></div><div id="cfg"></div>
         <pre id="early"></pre><pre id="scr"></pre> <!-- Оригинальный scr -->
         <div id="payloadMenu"></div><div id="status-text"></div><div id="nav"></div>
-        <div id="arm"></div><table id="rows"></table><div id="tally"></div>
+        <div id="arm"></div>
+        <div id="wrap"><table id="rows"></table></div>
+        <div id="tally"></div>
         <div id="summary"></div><div id="console"></div>
         <div id="cat"><img id="catImage" src="" alt=""></div>
         <div id="failureMessage"></div>
@@ -361,7 +365,9 @@
         }
 
         async function runSimulation() {
-            window.isSimulation = true; document.getElementById('sim-btn').classList.add('hidden-sys');
+            window.isSimulation = true; 
+            const simBtn = document.getElementById('sim-btn');
+            if (simBtn) simBtn.classList.add('hidden-sys');
             const delay = (ms) => new Promise(r => setTimeout(r, ms));
             window.uiScreenLine("Инициализация Slopkit UI..."); await delay(800);
             window.uiUpdateStage("waiting for the primitive", ""); await delay(1500); window.uiScreenLine("> alloc_history_spray [PASS]");
@@ -374,7 +380,8 @@
             renderPayloads();
             window.uiScreenLine("СИСТЕМА ГОТОВА К ЗАПУСКУ.");
             if(new URLSearchParams(window.location.search).get('go') === '1') {
-                document.getElementById('sim-btn').classList.add('hidden-sys');
+                const simBtn = document.getElementById('sim-btn');
+                if (simBtn) simBtn.classList.add('hidden-sys');
             }
         };
     </script>
@@ -384,8 +391,12 @@
     <script src="main.js?v=16"></script>
     <script>
         window.offsetsReady = new Promise(function (res, rej) {
+            // Исправление для режима предпросмотра (локально или в песочнице)
+            if (window.location.protocol === 'blob:' || window.location.protocol === 'file:') {
+                return res("simulated-offsets");
+            }
             var s = document.querySelector('script[src^="../offsets/"]');
-            if (!s) return rej(new Error("offsets script was never injected by main.js"));
+            if (!s) return rej(new Error("Скрипт offsets не загружен (возможно, вы открыли сайт не на PS5)"));
             if (typeof OFFSET_wk_vtable_first_element !== "undefined") return res(s.src);
             s.addEventListener("load", function () { res(s.src); });
             s.addEventListener("error", function () { rej(new Error("offsets 404: " + s.src)); });
@@ -394,7 +405,7 @@
     <script src="syscalls.js"></script>
 
     <!-- ================= ОРИГИНАЛЬНЫЙ МОДУЛЬ (С ВНЕДРЕННЫМИ UI ХУКАМИ) ================= -->
-    <script type="module">
+    <script type="text/plain" id="ps5-exploit-module">
         import { establishPrimitive, fakeCellReleased } from "./core.js?v=10";
         import { installWindowP, pairStatus } from "./mem.js?v=10";
         import { int64 } from "./int64.js";
@@ -828,12 +839,22 @@
         (async function entry() {
             screenLine("slopkit -- reading latch");
             const l = await latch.read();
-            if (!ARMED) {
-                stage("not armed");
-                return;
-            }
-            main().catch(err => { stage("boot failed: " + (err && err.message), "bad"); });
+            if (!ARMED) { stage("not armed"); return; }
+            main().catch(err => { stage("boot failed: " + ((err && err.message) || err), "bad"); });
         })();
+    </script>
+
+    <script>
+        // Инъекция боевого модуля только при работе на реальном сервере (http/https).
+        // Это полностью убирает ошибки импорта (Failed to resolve module) при локальном предпросмотре UI.
+        if (window.location.protocol !== 'blob:' && window.location.protocol !== 'file:') {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.textContent = document.getElementById('ps5-exploit-module').textContent;
+            document.body.appendChild(script);
+        } else {
+            console.warn("[СИМУЛЯЦИЯ] Запуск в режиме предпросмотра. Оригинальные скрипты эксплоита не загружены для предотвращения ошибок.");
+        }
     </script>
 </body>
 </html>
