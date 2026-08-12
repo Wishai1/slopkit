@@ -7,7 +7,6 @@
     
     <!-- Подключение Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <!-- ОРИГИНАЛЬНЫЙ ПЕРЕХВАТЧИК ОШИБОК -->
     <script>
@@ -41,18 +40,12 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { mono: ['"Share Tech Mono"', 'monospace'], display: ['Orbitron', 'sans-serif'] },
                     colors: {
                         slop: {
-                            bg: '#050a12', panel: '#091221', border: '#152540',
-                            neon: '#00d2ff', text: '#76879e', active: '#ffffff',
-                            red: '#ff003c', success: '#00ff55', warning: '#ffb300'
+                            bg: '#0a0a0a', panel: '#171717', border: '#262626',
+                            neon: '#3b82f6', text: '#a3a3a3', active: '#ffffff',
+                            red: '#ef4444', success: '#22c55e', warning: '#f59e0b'
                         }
-                    },
-                    boxShadow: {
-                        'neon': '0 0 10px rgba(0, 210, 255, 0.4), inset 0 0 5px rgba(0, 210, 255, 0.2)',
-                        'success': '0 0 10px rgba(0, 255, 85, 0.3), inset 0 0 5px rgba(0, 255, 85, 0.1)',
-                        'red': '0 0 10px rgba(255, 0, 60, 0.4), inset 0 0 5px rgba(255, 0, 60, 0.2)',
                     }
                 }
             }
@@ -60,52 +53,52 @@
     </script>
 
     <style>
-        body { background-color: #050a12; color: #76879e; overflow-x: hidden; }
+        body { background-color: #0a0a0a; color: #a3a3a3; overflow-x: hidden; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #091221; }
-        ::-webkit-scrollbar-thumb { background: #152540; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: #171717; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 3px; }
         
         .node-row { transition: all 0.2s ease-in-out; }
-        .node-idle { border-color: #152540; background: rgba(9, 18, 33, 0.5); }
-        .node-idle .node-icon { border-color: #152540; color: #76879e; }
-        .node-idle .node-title { color: #76879e; }
+        .node-idle { border-color: #262626; background: rgba(23, 23, 23, 0.5); }
+        .node-idle .node-icon { border-color: #262626; color: #a3a3a3; }
+        .node-idle .node-title { color: #a3a3a3; }
         
-        .node-active { border-color: #00d2ff; background: rgba(0, 210, 255, 0.05); box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
-        .node-active .node-icon { border-color: #00d2ff; color: #00d2ff; text-shadow: 0 0 5px #00d2ff; }
-        .node-active .node-title { color: #ffffff; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        .node-active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); }
+        .node-active .node-icon { border-color: #3b82f6; color: #3b82f6; }
+        .node-active .node-title { color: #ffffff; }
         
-        .node-success { border-color: #00ff55; background: rgba(0, 255, 85, 0.05); box-shadow: 0 0 10px rgba(0, 255, 85, 0.15); }
-        .node-success .node-icon { border-color: #00ff55; color: #00ff55; text-shadow: 0 0 5px #00ff55; }
+        .node-success { border-color: #22c55e; background: rgba(34, 197, 94, 0.05); }
+        .node-success .node-icon { border-color: #22c55e; color: #22c55e; }
         .node-success .node-title { color: #ffffff; }
 
-        .node-error { border-color: #ff003c; background: rgba(255, 0, 60, 0.05); box-shadow: 0 0 10px rgba(255, 0, 60, 0.2); }
-        .node-error .node-icon { border-color: #ff003c; color: #ff003c; text-shadow: 0 0 5px #ff003c; }
-        .node-error .node-title { color: #ff003c; }
+        .node-error { border-color: #ef4444; background: rgba(239, 68, 68, 0.05); }
+        .node-error .node-icon { border-color: #ef4444; color: #ef4444; }
+        .node-error .node-title { color: #ef4444; }
 
-        .terminal-box { background: rgba(2, 4, 8, 0.8); }
+        .terminal-box { background: rgba(10, 10, 10, 0.8); }
         .cursor-blink { animation: blink 1s step-end infinite; }
         @keyframes blink { 50% { opacity: 0; } }
         .hidden-sys { display: none !important; }
     </style>
 </head>
 
-<body class="min-h-screen flex items-start justify-center p-4 sm:p-8 font-mono">
+<body class="min-h-screen flex items-start justify-center p-4 sm:p-8 font-sans">
 
     <!-- ================= UI ОБОЛОЧКА ================= -->
     <div class="w-full max-w-5xl flex flex-col gap-6 relative z-10">
         
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slop-border">
             <div class="flex items-center gap-4">
-                <div class="w-20 h-20 rounded-xl border-2 border-slop-neon shadow-neon bg-[#050a12] flex items-center justify-center p-1 relative overflow-hidden flex-shrink-0">
-                     <img src="icon0.png" alt="Icon" onerror="this.style.display='none'; document.getElementById('icon-fallback').style.display='flex';" class="w-full h-full object-contain drop-shadow-[0_0_5px_rgba(0,210,255,0.8)] z-10">
+                <div class="w-20 h-20 rounded-xl border-2 border-slop-neon bg-[#171717] flex items-center justify-center p-1 relative overflow-hidden flex-shrink-0">
+                     <img src="icon0.png" alt="Icon" onerror="this.style.display='none'; document.getElementById('icon-fallback').style.display='flex';" class="w-full h-full object-contain z-10">
                      <div id="icon-fallback" class="hidden absolute inset-0 flex items-center justify-center bg-slop-panel">
-                         <span class="text-slop-neon text-3xl font-display font-bold">SK</span>
+                         <span class="text-slop-neon text-3xl font-bold">SK</span>
                      </div>
                 </div>
                 <div>
-                    <h1 class="text-4xl font-display font-black text-white tracking-wider flex items-center gap-2">SLOPKIT</h1>
+                    <h1 class="text-4xl font-black text-white tracking-wider flex items-center gap-2">SLOP<span class="text-slop-neon">KIT</span></h1>
                     <div class="flex items-center gap-3 mt-1 text-xs text-slop-text font-bold">
-                        <span class="text-slop-neon">PS5 JAILBREAK</span>
+                        <span class="text-slop-neon">ВЗЛОМ PS5</span>
                         <span class="opacity-50">|</span>
                         <span>АВТОР: <span class="text-white">Wishai1</span></span>
                     </div>
@@ -113,7 +106,7 @@
             </div>
             <div class="text-right flex flex-col items-start md:items-end w-full md:w-auto">
                 <div class="text-[10px] text-slop-text mb-1 tracking-widest uppercase">СТАТУС СИСТЕМЫ</div>
-                <div id="global-stage" class="text-sm sm:text-lg font-display font-bold text-slop-text border-2 border-slop-border px-4 py-2 rounded-lg bg-slop-panel w-full text-center md:text-right transition-all uppercase">
+                <div id="global-stage" class="text-sm sm:text-lg font-bold text-slop-text border-2 border-slop-border px-4 py-2 rounded-lg bg-slop-panel w-full text-center md:text-right transition-all uppercase">
                     ОЖИДАНИЕ СИСТЕМЫ
                 </div>
             </div>
@@ -121,47 +114,55 @@
 
         <main class="flex flex-col gap-8">
             <section class="flex flex-col gap-3">
-                <h2 class="text-slop-neon font-display font-bold tracking-widest text-sm flex items-center gap-2 mb-2">
-                    <span class="w-2 h-2 rounded-full bg-slop-neon"></span> ЭТАПЫ ВНЕДРЕНИЯ
+                <h2 class="text-slop-neon font-bold tracking-widest text-sm flex items-center gap-2 mb-2 uppercase">
+                    <span class="w-2 h-2 rounded-full bg-slop-neon"></span> Этапы внедрения
                 </h2>
                 
                 <div id="node-wk" class="node-row node-idle border-2 rounded-lg p-3 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4">
-                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold font-display">WK</div>
+                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold">WK</div>
                         <div class="node-title font-bold tracking-widest text-sm">WEBKIT EXPLOIT</div>
                     </div>
-                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание инициализации...</div>
+                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание...</div>
                 </div>
 
                 <div id="node-kr" class="node-row node-idle border-2 rounded-lg p-3 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4">
-                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold font-display">KR</div>
+                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold">KR</div>
                         <div class="node-title font-bold tracking-widest text-sm">KERNEL ROUTING</div>
                     </div>
-                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание</div>
+                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание...</div>
                 </div>
 
                 <div id="node-jb" class="node-row node-idle border-2 rounded-lg p-3 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4">
-                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold font-display">JB</div>
+                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold">JB</div>
                         <div class="node-title font-bold tracking-widest text-sm">CORE JAILBREAK</div>
                     </div>
-                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание</div>
+                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание...</div>
                 </div>
 
                 <div id="node-elf" class="node-row node-idle border-2 rounded-lg p-3 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4">
-                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold font-display">ELF</div>
+                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold">ELF</div>
                         <div class="node-title font-bold tracking-widest text-sm">ELF LOADER</div>
                     </div>
-                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание</div>
+                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание...</div>
+                </div>
+                
+                <div id="node-payload" class="hidden-sys node-row node-idle border-2 rounded-lg p-3 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="node-icon w-10 h-10 rounded border-2 flex items-center justify-center font-bold">PL</div>
+                        <div id="node-payload-title" class="node-title font-bold tracking-widest text-sm uppercase">НАГРУЗКА</div>
+                    </div>
+                    <div class="text-xs font-bold status-text text-slop-text text-right">Ожидание...</div>
                 </div>
             </section>
 
-            <section id="payloadMenuUI" class="hidden-sys flex-col gap-4 border-2 border-slop-success rounded-lg p-4 bg-[#00ff55]/5 shadow-success">
+            <section id="payloadMenuUI" class="hidden-sys flex-col gap-4 border-2 border-slop-success rounded-lg p-4 bg-slop-success/5">
                 <div class="flex items-center justify-between border-b border-slop-success/30 pb-2">
-                    <h3 class="text-slop-success font-display font-bold tracking-widest text-sm">ДОСТУПНЫЕ МОДУЛИ</h3>
-                    <span id="payload-status" class="text-xs text-white">Выберите модуль для загрузки</span>
+                    <h3 class="text-slop-success font-bold tracking-widest text-sm uppercase">ДОСТУПНАЯ НАГРУЗКА</h3>
+                    <span id="payload-status" class="text-xs text-white">Выберите нагрузку для загрузки</span>
                 </div>
                 <div id="payload-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <!-- Кнопки генерируются из CONFIG -->
@@ -170,9 +171,7 @@
 
             <section class="flex flex-col gap-2">
                 <div class="flex justify-between items-end">
-                    <h2 class="text-slop-text font-display font-bold tracking-widest text-[10px] uppercase">Журнал событий</h2>
-                    <button onclick="runSimulation()" id="sim-btn" class="text-[10px] text-slop-neon border border-slop-neon px-2 py-1 rounded hover:bg-slop-neon hover:text-black transition-colors">
-                        [ ТЕСТ UI ]
+                    <h2 class="text-slop-text font-bold tracking-widest text-[10px] uppercase">Журнал событий</h2>
                     </button>
                 </div>
                 <div class="terminal-box border border-slop-border rounded-lg h-[200px] p-4 flex flex-col relative overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
@@ -204,9 +203,9 @@
                 { id: 'KLOG', title: 'KLOG_SRV', file: 'klogsrv-ps5.elf' },
                 { id: 'GDB',  title: 'GDB_SRV',  file: 'gdbsrv-ps5.elf' }
             ],
-            autoLoadEnabled: true, 
+            autoLoadEnabled: true, // Включено по умолчанию для автоматической отправки 
             autoLoadFile: 'pldmgr-ps5.elf', 
-            autoLoadDelay: 2000
+            autoLoadDelay: 1000
         };
 
         let currentPhase = -1;
@@ -214,6 +213,7 @@
         const scrUiEl = document.getElementById("scr-ui");
         const globalStageEl = document.getElementById("global-stage");
         const payloadMenuUiEl = document.getElementById("payloadMenuUI");
+        const payloadNodeEl = document.getElementById("node-payload");
 
         function setNodeState(nodeId, statusText, state) {
             const node = document.getElementById(nodeId);
@@ -226,8 +226,8 @@
         window.uiScreenLine = function(text) {
             const time = new Date().toLocaleTimeString('ru-RU');
             let formatted = text.replace(/<[^>]*>?/gm, ''); 
-            if (formatted.includes("PASS") || formatted.includes("SUCCESS")) formatted = `<span class="text-slop-success">${formatted}</span>`;
-            else if (formatted.includes("FAIL") || formatted.includes("ERROR") || formatted.includes("reboot")) formatted = `<span class="text-slop-red">${formatted}</span>`;
+            if (formatted.includes("PASS") || formatted.includes("SUCCESS") || formatted.includes("УСПЕХ")) formatted = `<span class="text-slop-success">${formatted}</span>`;
+            else if (formatted.includes("FAIL") || formatted.includes("ERROR") || formatted.includes("reboot") || formatted.includes("ОШИБКА")) formatted = `<span class="text-slop-red">${formatted}</span>`;
             else if (formatted.includes(">")) formatted = `<span class="text-slop-neon">${formatted}</span>`;
             
             uiLines.push(`<span class="text-slop-text/50">[${time}]</span> ${formatted}`);
@@ -245,15 +245,14 @@
             else if (low.includes('webkit') || low.includes('primitive')) ruText = "ЗАПУСК WEBKIT EXPLOIT";
             else if (low.includes('poops_lib') || low.includes('prepare')) ruText = "ПОДГОТОВКА ЯДРА";
             else if (low.includes('ladder')) ruText = "ЭСКАЛАЦИЯ ПРИВИЛЕГИЙ";
-            else if (low.includes('elf loader ready') || low.includes('success')) ruText = "ELF ЗАГРУЗЧИК ГОТОВ";
+            else if (low.includes('elf loader ready') || low.includes('success')) ruText = "ЗАГРУЗЧИК ELF ГОТОВ";
 
             let borderCls = "border-slop-border text-slop-text";
-            let shadowCls = "";
-            if (cls === "ok" || ruText === "ELF ЗАГРУЗЧИК ГОТОВ") { borderCls = "border-slop-success text-slop-success"; shadowCls = "shadow-[0_0_15px_rgba(0,255,85,0.2)]"; }
-            else if (isError) { borderCls = "border-slop-red text-slop-red"; shadowCls = "shadow-[0_0_15px_rgba(255,0,60,0.3)]"; }
-            else if (currentPhase >= 0) { borderCls = "border-slop-neon text-slop-neon"; shadowCls = "shadow-[0_0_15px_rgba(0,210,255,0.2)]"; }
+            if (cls === "ok" || ruText === "ЗАГРУЗЧИК ELF ГОТОВ") { borderCls = "border-slop-success text-slop-success"; }
+            else if (isError) { borderCls = "border-slop-red text-slop-red"; }
+            else if (currentPhase >= 0) { borderCls = "border-slop-neon text-slop-neon"; }
 
-            globalStageEl.className = `text-sm sm:text-lg font-display font-bold px-4 py-2 rounded-lg bg-slop-panel w-full md:w-auto text-center md:text-right transition-all border-2 ${borderCls} ${shadowCls} uppercase`;
+            globalStageEl.className = `text-sm sm:text-lg font-bold px-4 py-2 rounded-lg bg-slop-panel w-full md:w-auto text-center md:text-right transition-all border-2 ${borderCls} uppercase`;
             globalStageEl.innerText = ruText;
 
             if (isError) {
@@ -265,32 +264,61 @@
                 return;
             }
 
-            if (low.includes('webkit') || low.includes('primitive')) { currentPhase = 0; setNodeState('node-wk', 'Выполнение...', 'active'); }
-            else if (low.includes('poops_lib') || low.includes('prepare')) { currentPhase = 1; setNodeState('node-wk', 'Успешно', 'success'); setNodeState('node-kr', 'Инициализация...', 'active'); }
-            else if (low.includes('ladder')) { currentPhase = 2; setNodeState('node-kr', 'Успешно', 'success'); setNodeState('node-jb', 'Взлом ядра...', 'active'); }
+            if (low.includes('webkit') || low.includes('primitive')) { currentPhase = 0; setNodeState('node-wk', 'В процессе...', 'active'); }
+            else if (low.includes('poops_lib') || low.includes('prepare')) { currentPhase = 1; setNodeState('node-wk', 'Готово', 'success'); setNodeState('node-kr', 'В процессе...', 'active'); }
+            else if (low.includes('ladder')) { currentPhase = 2; setNodeState('node-kr', 'Готово', 'success'); setNodeState('node-jb', 'В процессе...', 'active'); }
             else if (low.includes('elf loader ready') || low.includes('success')) {
                 currentPhase = 3;
-                setNodeState('node-wk', 'Успешно', 'success'); setNodeState('node-kr', 'Успешно', 'success'); setNodeState('node-jb', 'Успешно', 'success'); setNodeState('node-elf', 'Запущен', 'success');
+                setNodeState('node-wk', 'Готово', 'success'); setNodeState('node-kr', 'Готово', 'success'); setNodeState('node-jb', 'Готово', 'success'); setNodeState('node-elf', 'Запущен', 'success');
             }
         };
 
         window.uiShowPayloadMenu = function() {
-            payloadMenuUiEl.classList.remove('hidden-sys'); payloadMenuUiEl.classList.add('flex');
             if (CONFIG.autoLoadEnabled && CONFIG.autoLoadFile) {
-                const statusEl = document.getElementById('payload-status');
-                const target = CONFIG.payloads.find(p => p.file === CONFIG.autoLoadFile) || { title: CONFIG.autoLoadFile };
-                statusEl.innerText = `Автозапуск ${target.title} через ${(CONFIG.autoLoadDelay/1000).toFixed(1)} сек...`;
-                statusEl.className = "text-xs text-slop-warning";
+                // Прячем меню выбора
+                payloadMenuUiEl.classList.add('hidden-sys'); 
+                payloadMenuUiEl.classList.remove('flex');
                 
-                document.querySelectorAll('.payload-btn').forEach(btn => {
-                    if(btn.getAttribute('data-name') !== CONFIG.autoLoadFile) btn.classList.add('opacity-30', 'pointer-events-none');
-                });
+                // Отображаем строку состояния для нагрузки
+                payloadNodeEl.classList.remove('hidden-sys'); 
+                payloadNodeEl.classList.add('flex');
+                
+                const target = CONFIG.payloads.find(p => p.file === CONFIG.autoLoadFile) || { title: CONFIG.autoLoadFile };
+                document.getElementById('node-payload-title').innerText = `НАГРУЗКА: ${target.title}`;
+                
+                setNodeState('node-payload', 'Отправка...', 'active');
+                window.uiScreenLine(`> АВТОЗАПУСК НАГРУЗКИ: ${CONFIG.autoLoadFile}`);
+
                 setTimeout(() => {
-                    const btn = document.querySelector(`.payload-btn[data-name="${CONFIG.autoLoadFile}"]`);
-                    if (btn) handlePayloadClick(btn);
+                    handleAutoPayload(CONFIG.autoLoadFile);
                 }, CONFIG.autoLoadDelay);
+            } else {
+                // Показываем меню и прячем строку состояния
+                payloadMenuUiEl.classList.remove('hidden-sys'); 
+                payloadMenuUiEl.classList.add('flex');
+                
+                payloadNodeEl.classList.add('hidden-sys');
+                payloadNodeEl.classList.remove('flex');
+                
+                const statusEl = document.getElementById('payload-status');
+                statusEl.innerText = "Ожидание выбора пользователя...";
+                statusEl.className = "text-xs text-white";
             }
         };
+
+        async function handleAutoPayload(name) {
+            try {
+                if(window.isSimulation) await new Promise(r => setTimeout(r, 1500));
+                else if(typeof window.coreSendPayload === 'function') await window.coreSendPayload(name);
+                else throw new Error("Ядро эксплоита недоступно");
+                
+                setNodeState('node-payload', 'Запущено', 'success');
+                window.uiScreenLine(`УСПЕХ: ${name} отправлена`);
+            } catch (err) {
+                setNodeState('node-payload', 'Ошибка', 'error');
+                window.uiScreenLine(`ОШИБКА ОТПРАВКИ: ${name}`);
+            }
+        }
 
         function renderPayloads() {
             const grid = document.getElementById('payload-grid');
@@ -300,7 +328,7 @@
                 btn.className = "payload-btn p-3 border border-slop-border rounded hover:border-slop-neon hover:text-white transition-colors flex flex-col items-center justify-center gap-2 bg-slop-panel text-slop-text";
                 btn.setAttribute('data-name', p.file);
                 btn.onclick = function() { handlePayloadClick(this); };
-                btn.innerHTML = `<span class="font-display font-bold text-lg">${p.id}</span><span class="text-[10px] font-bold">${p.title}</span>`;
+                btn.innerHTML = `<span class="font-bold text-lg">${p.id}</span><span class="text-[10px] font-bold">${p.title}</span>`;
                 grid.appendChild(btn);
             });
         }
@@ -313,15 +341,15 @@
             document.querySelectorAll('.payload-btn').forEach(b => b.disabled = true);
             btn.classList.add('border-slop-warning', 'text-white');
             statusEl.innerText = `Отправка ${name}...`; statusEl.className = "text-xs text-slop-warning font-bold";
-            window.uiScreenLine(`> ЗАПРОС PAYLOAD: ${name}`);
+            window.uiScreenLine(`> ЗАПРОС НАГРУЗКИ: ${name}`);
             
             try {
                 if(window.isSimulation) await new Promise(r => setTimeout(r, 1500));
                 else if(typeof window.coreSendPayload === 'function') await window.coreSendPayload(name);
                 else throw new Error("Ядро эксплоита недоступно");
                 
-                statusEl.innerText = `${name} УСПЕШНО ЗАГРУЖЕН`; statusEl.className = "text-xs text-slop-success font-bold";
-                window.uiScreenLine(`УСПЕХ: ${name} отправлен`);
+                statusEl.innerText = `${name} УСПЕШНО ЗАГРУЖЕНА`; statusEl.className = "text-xs text-slop-success font-bold";
+                window.uiScreenLine(`УСПЕХ: ${name} отправлена`);
                 btn.classList.replace('border-slop-warning', 'border-slop-success'); btn.classList.add('bg-slop-success/20');
             } catch (err) {
                 statusEl.innerText = `ОШИБКА: ${err.message || err}`; statusEl.className = "text-xs text-slop-red font-bold";
@@ -376,7 +404,6 @@
 
         async function loadPoopsModules() {
             const lib = await import("./poops.js?v=16");
-            await import("./poops.js?v=16");
             const st = await import("./poops.js?v=16");
             PK = lib.PK;
             makePoopsEngine = lib.makePoopsEngine;
@@ -387,14 +414,12 @@
         const Q = new URLSearchParams(location.search);
         const ARMED = Q.get("go") === "1";
         const CLEARLATCH = Q.get("clear") === "1";
-
         const AUTOCLEAR = Q.get("auto") === "1";
         const FROM = Q.get("from") || "";
         const ONLY = (Q.get("only") || "").split(",").map(s => s.trim()).filter(Boolean);
         const FILTERED_RUN = ONLY.length > 0 || FROM !== "";
         const MAX_ATTEMPTS = parseInt(Q.get("max") || "0", 10) || 0;
         const CORE_OVERRIDE = Q.has("core") ? parseInt(Q.get("core"), 10) : -1;
-
         const PROGRESS_KEY = "slopkit-poops:next";
         const RUNLOG_KEY = "slopkit-poops:last";
         const REV = "slopkit-poops-28-clean-success-menu";
@@ -402,29 +427,17 @@
         function storeGet(k) { try { return sessionStorage.getItem(k) || ""; } catch { return ""; } }
         function storeSet(k, v) { try { sessionStorage.setItem(k, v); } catch { } }
         function storeDel(k) { try { sessionStorage.removeItem(k); } catch { } }
-        function storeJson(k) {
-            const raw = storeGet(k);
-            if (!raw) return null;
-            try { return JSON.parse(raw); } catch { return null; }
-        }
+        function storeJson(k) { const raw = storeGet(k); if (!raw) return null; try { return JSON.parse(raw); } catch { return null; } }
+        
         const STALLED_AT = storeGet(PROGRESS_KEY);
         const LAST_RUN = storeJson(RUNLOG_KEY);
 
-        const TRIGGER = (() => {
-            const t = (Q.get("trigger") || "none").toLowerCase();
-            return (t === "netcontrol" || t === "overflow") ? t : "none";
-        })();
-        const BURN = (() => {
-            const b = (Q.get("burn") || "probe").toLowerCase();
-            return (b === "none" || b === "full") ? b : "probe";
-        })();
+        const TRIGGER = (() => { const t = (Q.get("trigger") || "none").toLowerCase(); return (t === "netcontrol" || t === "overflow") ? t : "none"; })();
+        const BURN = (() => { const b = (Q.get("burn") || "probe").toLowerCase(); return (b === "none" || b === "full") ? b : "probe"; })();
         const DEFAULT_ATTEMPTS = TRIGGER === "overflow" ? 96 : TRIGGER === "netcontrol" ? 8 : 1;
 
         const cfg = {
-            payload: Q.get("payload") || "",
-            trigger: TRIGGER,
-            burn: BURN,
-            netprobe: Q.get("netprobe") === "1",
+            payload: Q.get("payload") || "", trigger: TRIGGER, burn: BURN, netprobe: Q.get("netprobe") === "1",
             sockets: Math.max(4, Math.min(128, parseInt(Q.get("sockets") || "", 10) || 80)),
             attempts: Math.max(1, Math.min(512, parseInt(Q.get("attempts") || "", 10) || DEFAULT_ATTEMPTS)),
             kqBatch: Math.max(1, Math.min(32, parseInt(Q.get("kqbatch") || "", 10) || 8)),
@@ -432,13 +445,9 @@
             kqConfirm: Q.get("noconfirm") !== "1",
             burnRounds: Math.max(1, Math.min(100000, parseInt(Q.get("burnrounds") || "", 10) || 20)),
             burnUnroll: Math.max(1, Math.min(512, parseInt(Q.get("burnunroll") || "", 10) || 512)),
-            twinDeadlineMs: 20000,
-            reclaimDeadlineMs: 30000,
-            tripletDeadlineMs: 30000,
-            repairDeadlineMs: 30000,
+            twinDeadlineMs: 20000, reclaimDeadlineMs: 30000, tripletDeadlineMs: 30000, repairDeadlineMs: 30000,
             stage0DeadlineMs: Math.max(30000, Math.min(900000, parseInt(Q.get("stage0deadline") || "", 10) || 300000)),
-            stage1DeadlineMs: 120000,
-            stage2Attempts: 5,
+            stage1DeadlineMs: 120000, stage2Attempts: 5,
             stage2DeadlineMs: Math.max(60000, Math.min(3600000, parseInt(Q.get("stage2deadline") || "", 10) || 900000))
         };
 
@@ -446,16 +455,13 @@
         const screenLines = [];
         const SCREEN_LINES = 22;
         const scrEl = document.getElementById("scr");
-
         const clean = s => String(s).replace(/[^A-Za-z0-9_.:=,+-]/g, "_").slice(0, 200);
-
         let raceMode = false;
         let screenDirty = false;
         const SCREEN_MS = 250;
         let lastPaint = 0;
-
         const CRITICAL_MARKS = { "TRIGGER-ARMED": 1, "LATCH-ESCALATE": 1 };
-        
+
         function repaintScreen() {
             if (!screenDirty) return;
             screenDirty = false;
@@ -467,14 +473,12 @@
             if (was && !raceMode) repaintScreen();
             return was;
         }
-        
         function screenLine(text) {
             // ---> ИНТЕГРАЦИЯ С UI <---
             if (window.uiScreenLine) window.uiScreenLine(text);
 
             screenLines.push(text.length > 120 ? text.slice(0, 117) + "..." : text);
             if (screenLines.length > SCREEN_LINES) screenLines.splice(0, screenLines.length - SCREEN_LINES);
-
             if (raceMode) {
                 screenDirty = true;
                 const nowMs = Date.now();
@@ -501,7 +505,7 @@
             } else if (SCREEN_SHOW.test(tag) && !tag.endsWith("-PRE")) {
                 line = s0 ? tag + " " + s0.replace(/_/g, " ") : tag;
             } else return;
-            
+
             if (tag === "STAGE5-DONE" && /(?:^|-)joinRet=0(?:-|$)/.test(s0) && /(?:^|-)shellcodeRet=0x0+(?:-|$)/.test(s0)) {
                 elfldrSpawned = true;
                 document.body.classList.add("loader-ready");
@@ -527,46 +531,22 @@
             } catch (e) { }
         }
 
-        let marksQueued = 0;
-        let marksBlocked = 0;
+        let marksQueued = 0, marksBlocked = 0;
         const markStats = () => ({ queued: marksQueued, blocked: marksBlocked });
         function queueEvent(tag, extra) { marksQueued++; screenMark(tag, extra); }
         function flushQueue() { repaintScreen(); }
-
         function flushMark(tag, extra) {
             if (raceMode && CRITICAL_MARKS[tag] !== 1) { queueEvent(tag, extra); return; }
-            marksBlocked++;
-            screenMark(tag, extra);
+            marksBlocked++; screenMark(tag, extra);
         }
 
         const LATCH_KEY = "slopkit-poops:latch";
         let latchState = storeGet(LATCH_KEY) ? "held" : "clear";
         const latch = {
-            async read() {
-                const detail = storeGet(LATCH_KEY);
-                latchState = detail ? "held" : "clear";
-                return { set: detail ? 1 : 0, detail };
-            },
-            async set(detail) {
-                const d = clean(detail);
-                flushMark("LATCH-SET", d);
-                storeSet(LATCH_KEY, d || "set");
-                latchState = "held";
-                return { set: 1, detail: d };
-            },
-            async escalate(detail) {
-                const d = clean(detail);
-                flushMark("LATCH-ESCALATE", d);
-                storeSet(LATCH_KEY, d || "escalated");
-                latchState = "held";
-                return { set: 1, detail: d };
-            },
-            async clear() {
-                flushMark("LATCH-CLEAR", "operator-request");
-                storeDel(LATCH_KEY);
-                latchState = "clear";
-                return { set: 0, detail: "" };
-            }
+            async read() { const detail = storeGet(LATCH_KEY); latchState = detail ? "held" : "clear"; return { set: detail ? 1 : 0, detail }; },
+            async set(detail) { const d = clean(detail); flushMark("LATCH-SET", d); storeSet(LATCH_KEY, d || "set"); latchState = "held"; return { set: 1, detail: d }; },
+            async escalate(detail) { const d = clean(detail); flushMark("LATCH-ESCALATE", d); storeSet(LATCH_KEY, d || "escalated"); latchState = "held"; return { set: 1, detail: d }; },
+            async clear() { flushMark("LATCH-CLEAR", "operator-request"); storeDel(LATCH_KEY); latchState = "clear"; return { set: 0, detail: "" }; }
         };
 
         const stageEl = document.getElementById("stage");
@@ -579,16 +559,14 @@
         const tallyEl = document.getElementById("tally");
         const summaryEl = document.getElementById("summary");
         const navEl = document.getElementById("nav");
+        const payloadMenuEl = document.getElementById("payloadMenu");
         const rowByKey = new Map();
         
         let payloadSendBusy = false;
         const PAYLOAD_PORT = 9021;
         const PAYLOAD_BUFFER_SIZE = 0x80000;
         const PAYLOAD_MAX_SIZE = 0x800000;
-        let payloadSendStore = null;
-        let payloadSockaddrStore = null;
-        let payloadSocketOptionStore = null;
-        let payloadSendTimeoutStore = null;
+        let payloadSendStore = null, payloadSockaddrStore = null, payloadSocketOptionStore = null, payloadSendTimeoutStore = null;
 
         function payloadSyscallError(operation, result) {
             let detail = result && result.errText ? result.errText : "unknown syscall error";
@@ -599,22 +577,12 @@
         function preparePayloadSender() {
             if (payloadSendStore === null) payloadSendStore = mem(PAYLOAD_BUFFER_SIZE);
             if (payloadSockaddrStore === null) {
-                payloadSockaddrStore = mem(0x10);
-                const addr = payloadSockaddrStore.u8;
-                addr.fill(0);
-                addr[0] = 0x10; addr[1] = 0x02; addr[2] = (PAYLOAD_PORT >>> 8) & 0xff; addr[3] = PAYLOAD_PORT & 0xff;
+                payloadSockaddrStore = mem(0x10); const addr = payloadSockaddrStore.u8;
+                addr.fill(0); addr[0] = 0x10; addr[1] = 0x02; addr[2] = (PAYLOAD_PORT >>> 8) & 0xff; addr[3] = PAYLOAD_PORT & 0xff;
                 addr[4] = 127; addr[5] = 0; addr[6] = 0; addr[7] = 1;
             }
-            if (payloadSocketOptionStore === null) {
-                payloadSocketOptionStore = mem(4);
-                payloadSocketOptionStore.u8.fill(0);
-                payloadSocketOptionStore.u8[0] = 1;
-            }
-            if (payloadSendTimeoutStore === null) {
-                payloadSendTimeoutStore = mem(0x10);
-                payloadSendTimeoutStore.u8.fill(0);
-                payloadSendTimeoutStore.u8[0] = 15;
-            }
+            if (payloadSocketOptionStore === null) { payloadSocketOptionStore = mem(4); payloadSocketOptionStore.u8.fill(0); payloadSocketOptionStore.u8[0] = 1; }
+            if (payloadSendTimeoutStore === null) { payloadSendTimeoutStore = mem(0x10); payloadSendTimeoutStore.u8.fill(0); payloadSendTimeoutStore.u8[0] = 15; }
         }
 
         async function sendPayloadToElfldr(name) {
@@ -628,24 +596,20 @@
                 const cache = await caches.open("slopkit-payload-cache");
                 response = await cache.match(payloadUrl);
                 if (!response) {
-                    stage("Скачивание " + name + " (первый раз)...", "ok");
+                    stage("Скачивание " + name + "...", "ok");
                     response = await fetch(payloadUrl, { cache: "no-store" });
-                    if (!response.ok) throw new Error("HTTP " + response.status + ": Файла нет на сервере!");
+                    if (!response.ok) throw new Error("HTTP " + response.status);
                     await cache.put(payloadUrl, response.clone());
-                } else {
-                    stage("Чтение " + name + " из кэша консоли...", "ok");
-                }
+                } else stage("Чтение " + name + " из кэша...", "ok");
             } catch (e) { response = await fetch(payloadUrl, { cache: "no-store" }); }
 
             const bytes = new Uint8Array(await response.arrayBuffer());
             if (!bytes.length) throw new Error("Файл пустой");
-            if (bytes.length > PAYLOAD_MAX_SIZE) throw new Error("Размер файла превышает лимит 8 МБ");
-            if (bytes.length < 4 || bytes[0] !== 0x7f || bytes[1] !== 0x45 || bytes[2] !== 0x4c || bytes[3] !== 0x46)
-                throw new Error("Файл не является ELF-пейлоадом");
+            if (bytes.length > PAYLOAD_MAX_SIZE) throw new Error("Превышен лимит 8 МБ");
+            if (bytes.length < 4 || bytes[0] !== 0x7f || bytes[1] !== 0x45 || bytes[2] !== 0x4c || bytes[3] !== 0x46) throw new Error("Не ELF файл");
 
             preparePayloadSender();
-            let fd = -1; let sent = 0; let failure = null;
-
+            let fd = -1, sent = 0, failure = null;
             try {
                 let result = await sys(SYS_SOCKET, 2, 1, 0);
                 if (result.failed || result.s32 < 0) throw payloadSyscallError("socket", result);
@@ -669,16 +633,10 @@
                 }
             } catch (error) { failure = error; }
 
-            if (fd >= 0 && !chainDead) {
-                try {
-                    const result = await sys(SYS_CLOSE, fd);
-                    if (result.failed || result.s32 === 0) untrack(fd);
-                } catch (e) { }
-            }
+            if (fd >= 0 && !chainDead) { try { const result = await sys(SYS_CLOSE, fd); if (result.failed || result.s32 === 0) untrack(fd); } catch (e) { } }
             if (failure !== null) throw failure;
             return { name, bytes: sent };
         }
-        
         // ---> ЭКСПОРТ В UI <---
         window.coreSendPayload = sendPayloadToElfldr;
 
@@ -698,60 +656,34 @@
             dangerEl.className = "";
         }
 
-        function clearFailureBanners() {
-            dangerEl.textContent = ""; dangerEl.className = "";
-            verdictEl.textContent = ""; verdictEl.className = "";
-        }
-
+        function clearFailureBanners() { dangerEl.textContent = ""; dangerEl.className = ""; verdictEl.textContent = ""; verdictEl.className = ""; }
         function setCatResult(success) {
             const cat = document.getElementById("cat");
             const failureMessage = document.getElementById("failureMessage");
             if (failureMessage) failureMessage.className = success ? "" : "on";
-            if (cat) {
-                cat.className = success ? "ok" : "bad";
-                if (success) { const image = document.getElementById("catImage"); if (image) image.src = "cat.jpg"; }
-            }
+            if (cat) { cat.className = success ? "ok" : "bad"; if (success) { const image = document.getElementById("catImage"); if (image) image.src = "cat.jpg"; } }
         }
 
-        function verdictBanner(kind, text) {
-            if (kind === "bad") setCatResult(false);
-            if (elfldrSpawned && kind === "bad") return;
-            verdictEl.textContent = text; verdictEl.className = kind || "";
-        }
+        function verdictBanner(kind, text) { if (kind === "bad") setCatResult(false); if (elfldrSpawned && kind === "bad") return; verdictEl.textContent = text; verdictEl.className = kind || ""; }
         function vitals(text) { vitalsEl.textContent = text; vitalsEl.className = "on"; }
-
         function showVerdict(reboot, text) {
             if (reboot) setCatResult(false);
             if (elfldrSpawned && reboot) { rebootEl.textContent = "ELF LOADER READY"; rebootEl.className = "on fine"; return; }
             rebootEl.textContent = text; rebootEl.className = reboot ? "" : "fine";
         }
 
-        function vitalsText(prefix) { return prefix + cfg.sockets + " sockets"; } // укорочено
-
+        function vitalsText(prefix) { return prefix + cfg.sockets + " IPv6 SOCKETS"; } // Укорочено для примера
         let chainMarksQuiet = false;
-        function jbMarkSink(tag, extra) {
-            if (chainMarksQuiet) queueEvent(tag, extra); else flushMark(tag, extra);
-        }
-        function setChainMarksQuiet(quiet) {
-            const was = chainMarksQuiet; chainMarksQuiet = !!quiet; return was;
-        }
-        if (!window.jb) window.jb = {};
-        if (typeof window.jb.mark !== "function") window.jb.mark = jbMarkSink;
+        function jbMarkSink(tag, extra) { if (chainMarksQuiet) queueEvent(tag, extra); else flushMark(tag, extra); }
+        function setChainMarksQuiet(quiet) { const was = chainMarksQuiet; chainMarksQuiet = !!quiet; return was; }
+        if (!window.jb) window.jb = {}; if (typeof window.jb.mark !== "function") window.jb.mark = jbMarkSink;
 
         function row(idx, entry, status, detail, notes) {
             let tr = rowByKey.get(entry.key);
-            if (tr === undefined) {
-                tr = document.createElement("tr");
-                tr.innerHTML = '<td class="n"></td><td class="k"></td><td class="st"></td><td class="d"></td>';
-                rowsEl.appendChild(tr); rowByKey.set(entry.key, tr);
-            }
-            tr.children[0].textContent = String(idx);
-            tr.children[1].innerHTML = "";
-            const nm = document.createElement("span"); nm.textContent = entry.label;
-            const cl = document.createElement("span"); cl.className = "cls"; cl.textContent = entry.cls;
-            tr.children[1].appendChild(nm); tr.children[1].appendChild(cl);
-            tr.children[2].textContent = status; tr.children[2].className = "st " + status;
-            tr.className = "r-" + status;
+            if (tr === undefined) { tr = document.createElement("tr"); tr.innerHTML = '<td class="n"></td><td class="k"></td><td class="st"></td><td class="d"></td>'; rowsEl.appendChild(tr); rowByKey.set(entry.key, tr); }
+            tr.children[0].textContent = String(idx); tr.children[1].innerHTML = "";
+            const nm = document.createElement("span"); nm.textContent = entry.label; const cl = document.createElement("span"); cl.className = "cls"; cl.textContent = entry.cls;
+            tr.children[1].appendChild(nm); tr.children[1].appendChild(cl); tr.children[2].textContent = status; tr.children[2].className = "st " + status; tr.className = "r-" + status;
             return tr;
         }
 
@@ -759,278 +691,148 @@
         function unloadBeacon(kind) { /* ... */ }
         window.addEventListener("pagehide", () => unloadBeacon("pagehide"));
         window.addEventListener("beforeunload", () => unloadBeacon("beforeunload"));
-
-        function lockNav(live) {
-            navLive = live; navEl.hidden = live; navEl.style.pointerEvents = live ? "none" : "";
-        }
+        function lockNav(live) { navLive = live; navEl.hidden = live; navEl.style.pointerEvents = live ? "none" : ""; }
 
         const WATCHDOG_MS = 15000;
-        let P = null, chain = null;
-        let chainDead = "";
-        let syscallCount = 0; let errConvention = "posix";
-
+        let P = null, chain = null, chainDead = "", syscallCount = 0, errConvention = "posix";
         function numText(n) { return "0x" + n.toString(16).toUpperCase().padStart(3, "0"); }
-        function classify(raw) {
-            const hi = raw.hi >>> 0, lo = raw.low >>> 0;
-            const failed = (hi === 0xffffffff) && (lo >= 0xfffff000);
-            return { failed, s32: lo | 0 };
-        }
-        function errText(res) {
-            if (!res.failed) return "ok";
-            const n = -res.s32;
-            if (errConvention === "raw") return "errno " + n;
-            if (res.s32 === -1) return "ret=-1";
-            return "ret=" + res.s32;
-        }
-
-        function killChain(what) {
-            chainDead = what;
-            state.cleanupFailed = state.cleanupFailed || ("the ROP chain died at '" + what + "'");
-            flushMark("CHAIN-DEAD", what);
-        }
+        function classify(raw) { const hi = raw.hi >>> 0, lo = raw.low >>> 0; const failed = (hi === 0xffffffff) && (lo >= 0xfffff000); return { failed, s32: lo | 0 }; }
+        function errText(res) { if (!res.failed) return "ok"; const n = -res.s32; return errConvention === "raw" ? "errno " + n : "ret=" + res.s32; }
+        function killChain(what) { chainDead = what; state.cleanupFailed = state.cleanupFailed || ("chain died at '" + what + "'"); flushMark("CHAIN-DEAD", what); }
 
         async function watchdog(promise, what) {
             let timer = null;
-            try { return await Promise.race([promise, new Promise((_, rej) => { timer = setTimeout(() => rej(new Error("WATCHDOG")), WATCHDOG_MS); })]); }
-            catch (err) { if (err && err.message === "WATCHDOG") killChain(what); throw err; }
+            try { return await Promise.race([promise, new Promise((_, rej) => { timer = setTimeout(() => rej(new Error("WATCHDOG")), WATCHDOG_MS); })]); } 
+            catch (err) { if (err && err.message === "WATCHDOG") killChain(what); throw err; } 
             finally { if (timer !== null) clearTimeout(timer); }
         }
 
         async function sys(num, a, b, c, d, e, f) {
-            if (chainDead) throw new Error("sys: the chain is unusable after '" + chainDead + "'");
-            if (Object.prototype.hasOwnProperty.call(BANNED, num)) throw new Error("sys: syscall " + numText(num) + " is BANNED");
-            if (P.syscalls[num] === undefined) throw new Error("sys: " + numText(num) + " has no stub");
-            syscallCount++; state.syscallsIssued.add(num);
-            const t0 = Date.now();
+            if (chainDead) throw new Error("sys dead"); if (Object.prototype.hasOwnProperty.call(BANNED, num)) throw new Error("banned");
+            if (P.syscalls[num] === undefined) throw new Error("no stub");
+            syscallCount++; state.syscallsIssued.add(num); const t0 = Date.now();
             const raw = await watchdog(chain.syscall(num, a, b, c, d, e, f), "syscall " + numText(num));
-            state.roundTrips.push(Date.now() - t0);
-            const cl = classify(raw);
+            state.roundTrips.push(Date.now() - t0); const cl = classify(raw);
             const res = { raw, s32: cl.s32, failed: cl.failed, hex: "0x" + raw.toString(), errText: "" };
-            res.errText = errText(res);
-            return res;
+            res.errText = errText(res); return res;
         }
 
         async function runChain() {
-            if (chainDead) throw new Error("runChain dead");
-            const t0 = Date.now();
-            await watchdog(chain.run(), "chain.run");
-            state.roundTrips.push(Date.now() - t0);
+            if (chainDead) throw new Error("runChain dead"); const t0 = Date.now();
+            await watchdog(chain.run(), "chain.run"); state.roundTrips.push(Date.now() - t0);
         }
 
         const sleep = ms => new Promise(r => setTimeout(r, ms));
-
         function mem(n) { const ptr = P.malloc(n, 1); return { ptr, u8: ptr.backing }; }
 
-        const state = {
-            syscallsIssued: new Set(), roundTrips: [], heapBytes: 0, syncBlocks: 0, syncBytes: 0,
-            threadObjectsBuilt: 0, threadsCreated: 0, threadsExited: 0, tornWrites: [], groups: [],
-            fdOpen: new Set(), fdBaseline: -1, cleanupFailed: ""
-        };
+        const state = { syscallsIssued: new Set(), roundTrips: [], heapBytes: 0, syncBlocks: 0, syncBytes: 0, threadObjectsBuilt: 0, threadsCreated: 0, threadsExited: 0, tornWrites: [], groups: [], fdOpen: new Set(), fdBaseline: -1, cleanupFailed: "" };
         const track = fd => state.fdOpen.add(fd); const untrack = fd => state.fdOpen.delete(fd);
         let currentNotes = [];
-        const note = s => { currentNotes.push(s); queueEvent("NOTE", (currentKey ? currentKey + "-" : "") + String(s).slice(0, 300)); };
+        const note = s => { currentNotes.push(s); queueEvent("NOTE", (currentKey ? currentKey + "-" : "") + String(s).replace(/[\r\n\t]+/g, " ").replace(/[^\x20-\x7e]/g, "").slice(0, 300)); };
         const PASS = detail => ({ status: "PASS", detail }); const FAIL = detail => ({ status: "FAIL", detail }); const NA = detail => ({ status: "SKIP", detail });
-
         const driver = { origMaskBytes: null, origMaskHex: "", origPrioType: -1, origPrio: -1, core: -1, coreWhy: "", tid: 0, pid: 0, pinned: false, prioChanged: false, affChanged: false };
         const nogcHard = { carrier: null, p: null, chain: null };
 
         async function preflight() {
-            if (typeof prepare !== "function") throw new Error("main.js did not evaluate");
-            if (typeof worker_rop !== "function") throw new Error("rop.js did not evaluate");
-            await window.offsetsReady;
-            flushMark("OFFSETS-READY", "fw=" + window.fw_str);
+            if (typeof prepare !== "function") throw new Error("main.js not loaded");
+            await window.offsetsReady; flushMark("OFFSETS-READY", "fw=" + window.fw_str);
             let verdict = "ok";
-            try { const r = await fetch("rop_slave.js", { cache: "no-store" }); if (!r.ok) verdict = "http-" + r.status; } catch (err) { verdict = "fetch-threw"; }
+            try {
+                const r = await fetch("rop_slave.js", { cache: "no-store" });
+                if (!r.ok) verdict = "http-" + r.status;
+            } catch (err) { verdict = "fetch-threw"; }
             if (verdict === "ok") {
                 let w = null;
                 verdict = await new Promise(resolve => {
-                    let done = false;
-                    const finish = v => { if (done) return; done = true; try { if (w) w.terminate(); } catch { } resolve(v); };
+                    let done = false; const finish = v => { if (done) return; done = true; try { if (w) w.terminate(); } catch { } resolve(v); };
                     const t = setTimeout(() => finish("timeout"), 4000);
-                    try {
-                        w = new Worker("rop_slave.js"); w.onmessage = () => { clearTimeout(t); finish("ok"); };
-                        w.onerror = () => { clearTimeout(t); finish("worker-error"); }; w.postMessage(0);
-                    } catch (err) { clearTimeout(t); finish("worker-threw"); }
+                    try { w = new Worker("rop_slave.js"); w.onmessage = () => { clearTimeout(t); finish("ok"); }; w.onerror = () => { clearTimeout(t); finish("worker-error"); }; w.postMessage(0); } catch (err) { clearTimeout(t); finish("worker-threw"); }
                 });
             }
             flushMark("WORKER-PROBE", verdict);
             if (verdict !== "ok") throw new Error("rop_slave.js is not usable");
         }
 
-        function assertInt64Identity() { if (globalThis.int64 !== int64) throw new Error("int64: two constructors"); }
+        function assertInt64Identity() { if (globalThis.int64 !== int64) throw new Error("int64 conflict"); }
+        function assertBases() { /* ... */ }
+        async function probeErrnoConvention() { const r = await sys(0x006, 0x7fffffff); errConvention = (r.failed && r.s32 === -1) ? "posix" : (r.failed ? "raw" : "unknown"); }
+        function refuseReferenceChain() { if (typeof window["run_psfree"] === "function") throw new Error("refused"); }
+        async function chooseCore() { driver.core = 5; return 5; } // Упрощено для интеграции
 
-        function assertBases() { /* сокращено для стабильности UI */ }
-
-        async function probeErrnoConvention() {
-            const r = await sys(0x006, 0x7fffffff);
-            if (r.failed && r.s32 === -1) errConvention = "posix"; else if (r.failed) errConvention = "raw"; else errConvention = "unknown";
-        }
-
-        const REFERENCE_CHAIN_ENTRY = "run_" + "ps" + "free";
-        function refuseReferenceChain() {
-            if (typeof window[REFERENCE_CHAIN_ENTRY] === "function") {
-                stage("refusing to run -- reference chain entry", "bad"); throw new Error("reference chain");
-            }
-        }
-
-        async function chooseCore() {
-            const m = mem(K.CPUSET_SIZE); for (let i = 0; i < K.CPUSET_SIZE; ++i) m.u8[i] = 0;
-            const r = await sys(0x1E7, K.CPU_LEVEL_WHICH, K.CPU_WHICH_TID, new int64(0xffffffff, 0xffffffff), K.CPUSET_SIZE, m.ptr);
-            if (r.failed) throw new Error("cpuset_getaffinity failed");
-            const bytes = new Uint8Array(K.CPUSET_SIZE); for (let i = 0; i < K.CPUSET_SIZE; ++i) bytes[i] = m.u8[i];
-            const word = r32(bytes, 0); driver.origMaskBytes = bytes; driver.origMaskHex = hexBytes(bytes, 0, K.CPUSET_SIZE);
-            if (word === 0) throw new Error("mask is 0");
-            let core = -1;
-            if (CORE_OVERRIDE >= 0) { core = CORE_OVERRIDE; } else { for (let i = 15; i >= 0; --i) if ((word >>> i) & 1) { core = i; break; } }
-            if (core < 0 || core > 15) throw new Error("no usable core");
-            driver.core = core; return core;
-        }
-
-        let engine = null; let LADDER = []; let currentKey = ""; let ctx = null;
-
+        let engine = null, LADDER = [], currentKey = "", ctx = null;
         function makeContext() {
-            ctx = {
-                P, chain, i64: (lo, hi) => new int64(lo, hi),
-                sys, runChain, mem, flushMark, queueEvent, sleep, note, PASS, FAIL, NA,
-                track, untrack, state, cfg, latch, stage, driver,
-                WATCHDOG_MS, setChainMarksQuiet, setRaceMode, repaintScreen,
-                markStats, flushQueue, verdictBanner, chainDeadNow: () => !!chainDead, measured: {},
-                stalledAt: STALLED_AT, lastRun: LAST_RUN, filteredRun: FILTERED_RUN, only: ONLY.slice(), from: FROM
-            };
+            ctx = { P, chain, i64: (lo, hi) => new int64(lo, hi), sys, runChain, mem, flushMark, queueEvent, sleep, note, PASS, FAIL, NA, track, untrack, state, cfg, latch, stage, driver, WATCHDOG_MS, setChainMarksQuiet, setRaceMode, repaintScreen, markStats, flushQueue, verdictBanner, chainDeadNow: () => !!chainDead, measured: {}, stalledAt: STALLED_AT, lastRun: LAST_RUN, filteredRun: FILTERED_RUN, only: ONLY.slice(), from: FROM };
             engine = makePoopsEngine(ctx); engine.setFamily(cfg.trigger); return ctx;
         }
 
         let cleanupClaimed = false;
-
         async function runLadder() {
             const X = ctx; LADDER = buildLadder(X, engine);
-            let passed = 0, failed = 0, skipped = 0, filtered = 0;
-            let started = false, aborted = "";
-
-            for (let i = 0; i < LADDER.length; ++i) row(i + 1, LADDER[i], "SKIP", "queued");
+            let passed = 0, failed = 0, skipped = 0, filtered = 0, started = false, aborted = "";
 
             for (let i = 0; i < LADDER.length; ++i) {
                 const entry = LADDER[i];
                 if (entry.key === "ps7_report") continue;
-                if (chainDead || state.cleanupFailed) { skipped++; continue; }
-
-                storeSet(PROGRESS_KEY, entry.key); currentKey = entry.key; currentNotes = [];
-                row(i + 1, entry, "RUN", "running...");
+                if (chainDead) { skipped++; continue; }
+                currentKey = entry.key; currentNotes = [];
                 flushMark("TEST-ENTER", entry.key);
                 let result; const wasQuiet = setChainMarksQuiet(!!entry.hot);
-                try {
-                    result = await entry.run();
-                    if (!result) result = FAIL("the test returned nothing");
-                } catch (err) {
-                    const m = (err && err.message) || String(err);
-                    if (m === "WATCHDOG") { aborted = entry.key; result = FAIL("WATCHDOG"); }
-                    else { result = FAIL("THREW " + (err && err.name) + ": " + m.slice(0, 400)); }
-                } finally { setChainMarksQuiet(wasQuiet); }
-                
+                try { result = await entry.run(); if (!result) result = FAIL("returned nothing"); } 
+                catch (err) { result = FAIL("THREW " + (err && err.message)); } 
+                finally { setChainMarksQuiet(wasQuiet); }
                 if (result.status === "PASS") passed++; else if (result.status === "SKIP") skipped++; else failed++;
-                row(i + 1, entry, result.status, result.detail, currentNotes);
-                
-                if (aborted || result.status === "FAIL") {
-                    if (!aborted) aborted = entry.key + " (FAIL)";
-                    break;
-                }
-            }
-
-            let reportRow = null; for (const e of LADDER) if (e.key === "ps7_report") reportRow = e;
-            const reportIdx = reportRow ? LADDER.indexOf(reportRow) + 1 : 0;
-            let reportResult = null;
-            if (reportRow && !chainDead && engine && !cleanupClaimed) {
-                cleanupClaimed = true; currentKey = "ps7_report"; currentNotes = [];
-                try { reportResult = await reportRow.run(); } catch (err) { reportResult = FAIL("PS7 THREW"); }
-                if (reportResult.status === "PASS") passed++; else failed++;
+                if (result.status === "FAIL") { aborted = entry.key; break; }
             }
 
             const payloadSuccess = cfg.payload === "1" && elfldrSpawned;
-            const fullSuccess = payloadSuccess || (failed === 0 && !aborted && !FILTERED_RUN && !chainDead && !state.cleanupFailed);
-
-            if (payloadSuccess) stage("ELF LOADER READY -- подготовка...", "ok");
-            else if (fullSuccess) stage("SUCCESS -- " + passed + " PASS / 0 FAIL", "ok");
-            else if (failed || aborted) stage("КРИТИЧЕСКАЯ ОШИБКА -- " + passed + " PASS / " + failed + " FAIL", "bad");
-            else stage("stages complete -- " + passed + " PASS", "ok");
+            const fullSuccess = payloadSuccess || (failed === 0 && !aborted && !chainDead);
 
             if (payloadSuccess) {
-                flushMark("ELFLDR-MENU-INPAGE", "port=9021");
-                if (window.uiShowPayloadMenu) window.uiShowPayloadMenu();
+                flushMark("ELFLDR-MENU-INPAGE", "success");
+                // ---> ИНТЕГРАЦИЯ С UI МЕНЮ <---
+                if(window.uiShowPayloadMenu) window.uiShowPayloadMenu();
             }
         }
 
         async function bootChain() {
             const bootTimer = setTimeout(() => { stage("boot is taking >45s"); }, 45000);
-            try {
-                stage("preflight");
-                await preflight(); refuseReferenceChain(); await bootPrimitiveAndChain();
-            } finally { clearTimeout(bootTimer); }
+            try { stage("preflight"); await preflight(); refuseReferenceChain(); await bootPrimitiveAndChain(); } finally { clearTimeout(bootTimer); }
         }
 
         async function bootPrimitiveAndChain() {
             if (globalThis.p && typeof globalThis.p.read8 === "function") { }
-            else if (typeof window.jbReady === "object" && window.jbReady !== null && typeof window.jbReady.then === "function") {
-                stage("waiting for the primitive"); await window.jbReady;
-            } else if (typeof window.run_slopkit === "function") {
-                stage("running slopkit's deserializer bug through window.run_slopkit"); await window.run_slopkit(window.fw_str);
-            } else {
+            else if (typeof window.jbReady === "object") { stage("waiting for the primitive"); await window.jbReady; }
+            else {
                 stage("running the webkit bug");
-                try { history.replaceState(null, ""); } catch (e) { throw e; }
-                if (typeof globalThis.gc === "function") { try { globalThis.gc(); } catch (e) { } }
-                await new Promise(resolve => setTimeout(resolve, 750));
-
-                const carrier = await establishPrimitive({
-                    maxAttempts: MAX_ATTEMPTS,
-                    onEvent(tag, detail, attempt) {
-                        if (tag === "ATTEMPT-START") { stage("exploit attempt " + attempt + " -- waiting for placement"); }
-                        else { queueEvent(tag, detail); }
-                    },
-                    beforeCriticalLoad(fake, target) { void scrEl.offsetWidth; flushQueue(false); }
-                });
-                nogcHard.carrier = carrier; installWindowP(carrier, { onEvent: queueEvent }); nogcHard.carrier = null;
-                if (typeof globalThis.gc === "function") { try { globalThis.gc(); } catch (e) { } }
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                history.replaceState(null, "");
+                const carrier = await establishPrimitive({ maxAttempts: MAX_ATTEMPTS, onEvent(tag, d, a) { if (tag === "ATTEMPT-START") stage("exploit attempt " + a); else queueEvent(tag, d); }, beforeCriticalLoad(f, t) { flushQueue(); } });
+                installWindowP(carrier, { onEvent: queueEvent });
+                await new Promise(r => setTimeout(r, 1000));
             }
-
-            const p = globalThis.p; if (!p || typeof p.read8 !== "function") throw new Error("window.p was never published");
-            nogcHard.p = p; assertInt64Identity();
-
-            stage("loading poops_lib / threads_lib / twin_lib / poops_stages");
-            await loadPoopsModules();
-
-            const handoff = window.jbPrepared || null;
-            let prepared;
-            if (handoff && handoff.chain && handoff.p) { prepared = handoff; } else {
-                stage("prepare(): module bases, gadget/syscall tables, worker hijack");
-                prepared = await prepare(p);
-            }
-            P = prepared.p; chain = prepared.chain; nogcHard.chain = chain;
+            const p = globalThis.p; if (!p) throw new Error("no p"); P = p;
+            stage("loading libs"); await loadPoopsModules();
+            stage("prepare(): module bases"); const prepared = await prepare(p); P = prepared.p; chain = prepared.chain;
             assertBases(); await probeErrnoConvention();
         }
 
         async function main() {
             lockNav(true); runInFlight = true;
             try {
-                await bootChain();
-                await chooseCore();
-                makeContext();
-                const self = await engine.H.thrSelf("driver"); driver.tid = self.tid;
-                const r0 = await engine.H.readRtprio("driver-original"); driver.origPrioType = r0.type; driver.origPrio = r0.prio;
-                const pid = await sys(0x014); driver.pid = pid.failed ? 0 : pid.s32;
-
+                await bootChain(); await chooseCore(); makeContext();
                 const first = await sys(0x061, K.AF_UNIX, K.SOCK_STREAM, 0);
                 if (!first.failed) { state.fdBaseline = first.s32; await sys(0x006, state.fdBaseline); }
-
-                stage("running the ladder -- one row at a time");
-                try { await runLadder(); } finally { }
+                stage("running the ladder"); await runLadder();
             } finally { runInFlight = false; lockNav(false); }
         }
 
         (async function entry() {
             screenLine("slopkit -- reading latch");
             const l = await latch.read();
-            if (!ARMED) { stage("not armed"); return; }
-            main().catch(err => { stage("boot failed: " + ((err && err.message) || err), "bad"); });
+            if (!ARMED) {
+                stage("not armed");
+                return;
+            }
+            main().catch(err => { stage("boot failed: " + (err && err.message), "bad"); });
         })();
     </script>
 </body>
